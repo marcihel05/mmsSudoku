@@ -912,11 +912,38 @@ namespace Sudoku
 
         private void fillSquare(int dim, int row, int column)
         {
+            List<string> values = new List<string>();
+            for (int i = 1; i < 10; ++i) values.Add(i.ToString());
+            if(dim > 9)
+            {
+                for( char c = 'A'; c <= 'G'; ++c) values.Add(c.ToString());
+            }
+            if (dim > 16)
+            {
+                for (char c = 'H'; c <= 'P'; ++c) values.Add(c.ToString());
+            }
+
+
             int num;
             int sqrt = (int)Math.Sqrt(dim);
+            for( int i = 0; i < sqrt; ++i)
+            {
+                for( int j = 0; j < sqrt; ++j)
+                {
+                    do
+                    {
+                        Random rnd = new Random();
+                        num = rnd.Next(0, dim);
+                    }
+                    while (valueInSquare(dim, values[num], row, column, gmatrica));
+                    gmatrica[row + i][column + j] = values[num];
+                }
+                
+            }
+
         }
 
-        private void fillSquare9(int row, int column)
+       /* private void fillSquare9(int row, int column)
         {
             int num;
             for(int i = 0; i < 3; ++i)
@@ -953,7 +980,7 @@ namespace Sudoku
                     gmatrica16[row + i, column + j] = values[num];
                 }
             }
-        }
+        }*/
 
         private bool generateRemaining(int dim, int i, int j)
         {
@@ -1067,12 +1094,12 @@ namespace Sudoku
             return false;
         }
 
-        private bool valueInRow(int dim, string val, int r, string[,] matrica)
+        private bool valueInRow(int dim, string val, int r, List<List<string>> matrica)
         {
             int column;
 
             for (column = 0; column < dim; ++column)
-                if (val.Equals(matrica[r, column]))
+                if (val.Equals(matrica[r][column]))
                     return true;
 
             return false;
@@ -1100,12 +1127,12 @@ namespace Sudoku
             return false;
         }
 
-        private bool valueInColumn(int dim, string val, int c, string[,] matrica)
+        private bool valueInColumn(int dim, string val, int c, List<List<string>> matrica)
         {
             int row;
 
             for (row = 0; row < dim; ++row)
-                if (val.Equals(matrica[row, c]))
+                if (val.Equals(matrica[row][c]))
                     return true;
 
             return false;
@@ -1129,6 +1156,16 @@ namespace Sudoku
             for (row = 0; row < 16; ++row)
                 if (val.Equals(matrica[row, c]))
                     return true;
+
+            return false;
+        }
+
+        private bool valueInSquare(int dim, string val, int r, int c, List<List<string>> listMatrica)
+        {
+            int i, j;
+            int sqrt = (int)Math.Sqrt(dim);
+
+
 
             return false;
         }
