@@ -46,6 +46,10 @@ namespace Sudoku
         private string[,] gmatrica25;
         private string[,] pgmatrica25;
 
+        private List<List<string>> matrica;
+        private List<List<string>> gmatrica;
+        private List<List<string>> pgmatrica;
+
         private string biljeske;
 
         public Form1()
@@ -71,6 +75,10 @@ namespace Sudoku
             //pgmatrica9 = new string[9, 9];
             pgmatrica16 = new string[16, 16];
             pgmatrica25 = new string[25, 25];
+
+            matrica = new List<List<string>>();
+            gmatrica = new List<List<string>>();
+            pgmatrica = new List<List<string>>();
 
             InitializeComponent();
             DoubleBuffered = true; //za smanjenje grafičkih smetnji
@@ -131,6 +139,13 @@ namespace Sudoku
             Array.Clear(pgmatrica16, 0, pgmatrica16.Length);
             Array.Clear(pgmatrica25, 0, pgmatrica25.Length);
 
+            matrica.Clear();
+            gmatrica.Clear();
+            pgmatrica.Clear();
+            matrica.TrimExcess();
+            gmatrica.TrimExcess();
+            pgmatrica.TrimExcess();
+
             this.label1.Visible = true;
             this.Controls.Remove(congratsl);
             this.Controls.Remove(congratst);
@@ -171,25 +186,25 @@ namespace Sudoku
                 else if (i == 1)
                 {
                     gumb.Text = "MEDIUM";
-                    gumb.Name = "medium";
+                    gumb.Name = "medium";            
                 }
 
                 else if (i == 2)
                 {
                     gumb.Text = "HARD";
-                    gumb.Name = "hard";
+                    gumb.Name = "hard";                   
                 }
 
                 else if (i == 3)
                 {
                     gumb.Text = "16x16";
-                    gumb.Name = "16";
+                    gumb.Name = "16";                   
                 }
 
                 else
                 {
                     gumb.Text = "25x25";
-                    gumb.Name = "25";
+                    gumb.Name = "25";                  
                 }
                 
                 gumb.Click += new EventHandler(gumb_Click);
@@ -223,7 +238,8 @@ namespace Sudoku
         private void gumb_Click(object sender, EventArgs e)
         {
             clear_All();
-            start_Game(sender);
+            //start_Game(sender);
+            start_GameNew(sender);
         }
 
         private void initialize_Notes() //stvara label i gumb za bilješke
@@ -280,7 +296,7 @@ namespace Sudoku
             this.Controls.Add(time);
         }
 
-        private void start_Game(object sender) //pokreće igru
+       /* private void start_Game(object sender) //pokreće igru
         {
             initialize_Notes();
             initialize_Time();
@@ -295,6 +311,17 @@ namespace Sudoku
                 cellheight = 45;
                 cellnumber = 9;
                 grid.Location = new Point(this.label1.Location.X, this.button1.Location.Y - 150);
+                for (int j = 0; j < 3; ++j)
+                {
+                    List<string> pom = new List<string>();
+                    for (int k = 0; k < 3; ++k)
+                    {
+                        pom.Add("");
+                    }
+                    matrica.Add(pom);
+                    gmatrica.Add(pom);
+                    pgmatrica.Add(pom);
+                }
                 start_NormalGame();
             }
 
@@ -307,22 +334,129 @@ namespace Sudoku
                 cellnumber = 16;
                 this.label1.Visible = false;
                 grid.Location = new Point(this.label1.Location.X - 120, this.button1.Location.Y - 350);
+                for (int j = 0; j < 4; ++j)
+                {
+                    List<string> pom = new List<string>();
+                    for (int k = 0; k < 4; ++k)
+                    {
+                        pom.Add("");
+                    }
+                    matrica.Add(pom);
+                    gmatrica.Add(pom);
+                    pgmatrica.Add(pom);
+                }
                 start_NormalGame();
             }  
 
             else if (gumb.Name == "25"){
                 generate_sudoku(sender, 25);
                 initialize_NewGrid("grid");
-                cellwidth = 30;
-                cellheight = 30;
+                cellwidth = 25;
+                cellheight = 25;
                 cellnumber = 25;
                 this.label1.Visible = false;
                 grid.Location = new Point(this.label1.Location.X - 120, this.button1.Location.Y - 350);
+                for (int j = 0; j < 5; ++j)
+                {
+                    List<string> pom = new List<string>();
+                    for (int k = 0; k < 5; ++k)
+                    {
+                        pom.Add("");
+                    }
+                    matrica.Add(pom);
+                    gmatrica.Add(pom);
+                    pgmatrica.Add(pom);
+                }
                 start_NormalGame();
+            }
+        }*/
+
+
+        private void start_GameNew(object sender) //pokreće igru
+        {
+            initialize_Notes();
+            initialize_Time();
+
+            Button gumb = (sender as Button);
+            Console.WriteLine("start game new");
+
+            if (gumb.Name == "easy" || gumb.Name == "medium" || gumb.Name == "hard") //one sve imaju tablicu 9x9
+            {
+                for (int j = 0; j < 3; ++j)
+                {
+                    List<string> pom = new List<string>();
+                    for (int k = 0; k < 3; ++k)
+                    {
+                        pom.Add("");
+                    }
+                    matrica.Add(pom);
+                    gmatrica.Add(pom);
+                    pgmatrica.Add(pom);
+                }
+                generate_sudoku(sender, 9); //generiramo sudoku igru 9x9 ovisno o težini
+                initialize_NewGrid("grid");
+                cellwidth = 45;
+                cellheight = 45;
+                cellnumber = 9;
+                grid.Location = new Point(this.label1.Location.X, this.button1.Location.Y - 150);
+                
+                start_NormalGameNew();
+            }
+
+            else if (gumb.Name == "16") //tablica 16x16
+            {
+                for (int j = 0; j < 4; ++j)
+                {
+                    List<string> pom = new List<string>();
+                    for (int k = 0; k < 4; ++k)
+                    {
+                        pom.Add("");
+                    }
+                    matrica.Add(pom);
+                    gmatrica.Add(pom);
+                    pgmatrica.Add(pom);
+                }
+                generate_sudoku(sender, 16); //generiramo sudoku igru 16x16
+                initialize_NewGrid("grid");
+                cellwidth = 42;
+                cellheight = 42;
+                cellnumber = 16;
+                this.label1.Visible = false;
+                grid.Location = new Point(this.label1.Location.X - 120, this.button1.Location.Y - 350);
+                
+                start_NormalGameNew();
+            }
+
+            else if (gumb.Name == "25")
+            {
+                Console.WriteLine("25");
+                for (int j = 0; j < 5; ++j)
+                {
+                    List<string> pom = new List<string>();
+                    for (int k = 0; k < 5; ++k)
+                    {
+                        pom.Add("");
+                    }
+
+                    matrica.Add(pom);
+                    gmatrica.Add(pom);
+                    pgmatrica.Add(pom);
+                }
+                generate_sudoku(sender, 25);
+                Console.WriteLine("generiran sudoku");
+                initialize_NewGrid("grid");
+                Console.WriteLine("generiran sudoku");
+                cellwidth = 25;
+                cellheight = 25;
+                cellnumber = 25;
+                this.label1.Visible = false;
+                grid.Location = new Point(this.label1.Location.X - 120, this.button1.Location.Y - 350);
+                
+                start_NormalGameNew();
             }
         }
 
-        private void start_NormalGame()
+       /* private void start_NormalGame()
         {
             grid.Size = new Size(cellwidth * cellnumber + 3, cellwidth * cellnumber + 3);
             notesl.Location = new Point(this.label1.Location.X, this.grid.Location.Y + grid.Size.Height + 20);
@@ -357,6 +491,12 @@ namespace Sudoku
                         grid.Rows[i].Cells[j].ReadOnly = true;
                         grid.Rows[i].Cells[j].Style.ForeColor = Color.Black;
                     }
+                    else if ( cellnumber == 25 && pgmatrica25[i,j] != "" )
+                    {
+                        grid.Rows[i].Cells[j].Value = pgmatrica25[i, j];
+                        grid.Rows[i].Cells[j].ReadOnly = true;
+                        grid.Rows[i].Cells[j].Style.ForeColor = Color.Black;
+                    }
                 }
             //podebljanje 3x3 odnosno 4x4 podtablica u tablici
             if (cellnumber == 9)
@@ -375,6 +515,92 @@ namespace Sudoku
                 grid.Rows[3].DividerHeight = 2;
                 grid.Rows[7].DividerHeight = 2;
                 grid.Rows[11].DividerHeight = 2;
+            }
+
+            else if (cellnumber == 25)
+            {
+                grid.Columns[4].DividerWidth = 2;
+                grid.Columns[9].DividerWidth = 2;
+                grid.Columns[14].DividerWidth = 2;
+                grid.Columns[19].DividerWidth = 2;
+                grid.Rows[4].DividerHeight = 2;
+                grid.Rows[9].DividerHeight = 2;
+                grid.Rows[14].DividerHeight = 2;
+                grid.Rows[19].DividerHeight = 2;
+            }
+
+            Controls.Add(grid);
+        }*/
+
+        private void start_NormalGameNew()
+        {
+            grid.Size = new Size(cellwidth * cellnumber + 3, cellwidth * cellnumber + 3);
+            notesl.Location = new Point(this.label1.Location.X, this.grid.Location.Y + grid.Size.Height + 20);
+            notesb.Location = new Point(notesl.Location.X + notesl.Size.Width + 5, notesl.Location.Y);
+            time.Location = new Point(notesl.Location.X, notesl.Location.Y + notesl.Size.Height + 5);
+
+            for (int i = 0; i < cellnumber; ++i)
+            {
+                DataGridViewTextBoxColumn text = new DataGridViewTextBoxColumn();
+                text.MaxInputLength = 1;
+                grid.Columns.Add(text);
+                grid.Columns[i].Name = (i + 1).ToString();
+                grid.Columns[i].Width = cellwidth;
+                grid.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                DataGridViewRow row = new DataGridViewRow();
+                row.Height = cellheight;
+                grid.Rows.Add(row);
+            }
+
+            for (int i = 0; i < cellnumber; ++i)
+                for (int j = 0; j < cellnumber; ++j)
+                {
+                    if( pgmatrica[i][j] != "")
+                    {
+                        grid.Rows[i].Cells[j].Value = pgmatrica[i][j];
+                        grid.Rows[i].Cells[j].ReadOnly = true;
+                        grid.Rows[i].Cells[j].Style.ForeColor = Color.Black;
+                    }
+                }
+            //podebljanje 3x3 odnosno 4x4  odnosno 5x5 podtablica u tablici
+           /* if (cellnumber == 9)
+            {
+                grid.Columns[2].DividerWidth = 2;
+                grid.Columns[5].DividerWidth = 2;
+                grid.Rows[2].DividerHeight = 2;
+                grid.Rows[5].DividerHeight = 2;
+            }
+
+            else if (cellnumber == 16)
+            {
+                grid.Columns[3].DividerWidth = 2;
+                grid.Columns[7].DividerWidth = 2;
+                grid.Columns[11].DividerWidth = 2;
+                grid.Rows[3].DividerHeight = 2;
+                grid.Rows[7].DividerHeight = 2;
+                grid.Rows[11].DividerHeight = 2;
+            }
+
+            else if (cellnumber == 25)
+            {
+                grid.Columns[4].DividerWidth = 2;
+                grid.Columns[9].DividerWidth = 2;
+                grid.Columns[14].DividerWidth = 2;
+                grid.Columns[19].DividerWidth = 2;
+                grid.Rows[4].DividerHeight = 2;
+                grid.Rows[9].DividerHeight = 2;
+                grid.Rows[14].DividerHeight = 2;
+                grid.Rows[19].DividerHeight = 2;
+            }*/
+            int sqrt = (int)Math.Sqrt(cellnumber);
+
+            for (int i = 0; i < cellnumber - sqrt; ++i)
+            {
+                if (i % sqrt == sqrt - 1)
+                {
+                    grid.Columns[i].DividerWidth = 2;
+                    grid.Rows[i].DividerHeight = 2;
+                }
             }
 
             Controls.Add(grid);
@@ -398,6 +624,15 @@ namespace Sudoku
             else if (cellnumber == 16)
             {
                 if ((!char.IsDigit(e.KeyChar) && !char.Equals(e.KeyChar, 'A') && !char.Equals(e.KeyChar, 'B') && !char.Equals(e.KeyChar, 'C') && !char.Equals(e.KeyChar, 'D') && !char.Equals(e.KeyChar, 'E') && !char.Equals(e.KeyChar, 'F') && !char.Equals(e.KeyChar, 'G')) || (char.IsDigit(e.KeyChar) && char.Equals(e.KeyChar, '0')))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+            else if (cellnumber == 25)
+            {
+                if ((!char.IsDigit(e.KeyChar) && !char.Equals(e.KeyChar, 'B') && !char.Equals(e.KeyChar, 'B') && !char.Equals(e.KeyChar, 'C') && !char.Equals(e.KeyChar, 'D') && !char.Equals(e.KeyChar, 'E') && !char.Equals(e.KeyChar, 'F') && !char.Equals(e.KeyChar, 'G') && !char.Equals(e.KeyChar, 'H') && !char.Equals(e.KeyChar, 'I') &&
+                    !char.Equals(e.KeyChar, 'J') && !char.Equals(e.KeyChar, 'K') && !char.Equals(e.KeyChar, 'L') && !char.Equals(e.KeyChar, 'M') && !char.Equals(e.KeyChar, 'N') && !char.Equals(e.KeyChar, 'P')) || (char.IsDigit(e.KeyChar) && char.Equals(e.KeyChar, '0')))
                 {
                     e.Handled = true;
                     return;
@@ -551,15 +786,52 @@ namespace Sudoku
 
         private void generate_sudoku(object sender, int dim)
         {
+            Console.WriteLine("generating sudoku");
             generateDiagonals(dim);
             generateRemaining(0, (int) Math.Sqrt(dim));
+            Console.WriteLine("generated solved");
 
             string difficulty = (sender as Button).Text;
+
+            if (difficulty == "EASY")
+                generateUnsolvedSudoku(dim, 40);
+            if (difficulty == "MEDIUM")
+                generateUnsolvedSudoku(dim, 50);
+            if (difficulty == "HARD")
+                generateUnsolvedSudoku(dim, 60);
+            if (difficulty == "16x16")
+                generateUnsolvedSudoku(dim, 100);
+            if (difficulty == "25x25")
+                generateUnsolvedSudoku(dim, 250);
+            Console.WriteLine("generated unsolved");
         }
 
         private void generateUnsolvedSudoku(int dim, int blanks)
         {
+            int sqrt = (int)Math.Sqrt(dim);
+            for( int i = 0; i < sqrt; ++i)
+            {
+                for( int j = 0; j < sqrt; ++j)
+                {
+                    pgmatrica[i][j] = gmatrica[i][j];
+                }
+            }
 
+            int r, c;
+            for (int i = 0; i < blanks; ++i)
+            {
+                do
+                {
+                    Random rnd = new Random();
+                    r = rnd.Next(0, sqrt);
+                    c = rnd.Next(0, sqrt);
+                   
+                }
+                while (pgmatrica[r][c] == "");
+
+                pgmatrica[r][c] = "";
+                Console.WriteLine("gotov");
+            }
         }
 
         private void generateUnsolvedSudoku9(int blanks) // prazni polja
@@ -640,7 +912,8 @@ namespace Sudoku
 
         private void fillSquare(int dim, int row, int column)
         {
-
+            int num;
+            int sqrt = (int)Math.Sqrt(dim);
         }
 
         private void fillSquare9(int row, int column)
@@ -689,7 +962,7 @@ namespace Sudoku
 
         private bool generateRemaining(int i, int j)
         {
-            return false;
+            return true;
         }
 
         private bool generateRemaining9(int i, int j)
