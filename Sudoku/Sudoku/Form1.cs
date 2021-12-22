@@ -32,6 +32,9 @@ namespace Sudoku
         private PictureBox congratsp;
         private Button hintb;
         private SoundPlayer yay;
+        private SoundPlayer music;
+       // private Label soundl;
+        //private Button soundb;
 
         //matrice igre
         //private string[,] matrica9;
@@ -61,6 +64,12 @@ namespace Sudoku
             levels = new List<Button>();
 
             t = new Timer();
+
+            music = new SoundPlayer(Properties.Resources.funnysong);
+            music.PlayLooping();
+
+            //soundl = new Label();
+            //soundb = new Button();
 
             cellwidth = 45;
             cellheight = 45;
@@ -432,7 +441,6 @@ namespace Sudoku
                     gmatrica.Add(pom2);
                     pgmatrica.Add(pom3);
                 }
-                Console.WriteLine("velicina matrice " + matrica.Count().ToString());
                 generate_sudoku(sender, 9); //generiramo sudoku igru 9x9 ovisno o težini
                 initialize_NewGrid("grid");
                 cellwidth = 45;
@@ -490,13 +498,10 @@ namespace Sudoku
                     matrica.Add(pom1);
                     gmatrica.Add(pom2);
                     pgmatrica.Add(pom3);
-                    //Console.WriteLine(pgmatrica.Count());
                 }
                 for (char c = 'A'; c <= 'P'; ++c) values.Add(c.ToString());
                 generate_sudoku(sender, 25);
-                Console.WriteLine("generiran sudoku");
                 initialize_NewGrid("grid");
-                Console.WriteLine("generiran grid");
                 cellwidth = 25;
                 cellheight = 25;
                 cellnumber = 25;
@@ -605,20 +610,19 @@ namespace Sudoku
             }
             //Console.WriteLine(pgmatrica.Count());
             // for( int i = 0; i < pgmatrica.Count(); ++i) Console.WriteLine(pgmatrica[i].Count());
-            List<string> pom = new List<string>();
+           /* List<string> pom = new List<string>();
             for (int i = 0; i < cellnumber; ++i)
                 for (int j = 0; j < cellnumber; ++j)
-                    pom.Add(pgmatrica[i][j]);
+                    pom.Add(pgmatrica[i][j]);*/
             for (int i = 0; i < cellnumber; ++i)
                 for (int j = 0; j < cellnumber; ++j)
                 {
                     //Console.WriteLine(pgmatrica[i].Count());
-                    //if( pgmatrica[i][j] != " ")
-                    if( pom[i*cellnumber + j] != " ")
+                    if( pgmatrica[i][j] != " ")
+                    //if( pom[i*cellnumber + j] != " ")
                     {
-                        Console.WriteLine("wtf");
-                        //grid.Rows[i].Cells[j].Value = pgmatrica[i][j];
-                        grid.Rows[i].Cells[j].Value = pom[i * cellnumber + j];
+                        grid.Rows[i].Cells[j].Value = pgmatrica[i][j];
+                        //grid.Rows[i].Cells[j].Value = pom[i * cellnumber + j];
                         grid.Rows[i].Cells[j].ReadOnly = true;
                         grid.Rows[i].Cells[j].Style.ForeColor = Color.Black;
                         //Console.WriteLine(pgmatrica[i].Count());
@@ -722,7 +726,6 @@ namespace Sudoku
                 foreach (DataGridViewTextBoxColumn column in grid.Columns)
                 {
                     column.MaxInputLength = 1;
-                    //column.ReadOnly = false;
                 }
                 int r = grid.CurrentCell.RowIndex;
                 int c = grid.CurrentCell.ColumnIndex;
@@ -730,8 +733,6 @@ namespace Sudoku
                 if (!val.Equals(gmatrica[r][c]) && val!= ((char)8).ToString())
                 {
                     MessageBox.Show("Wrong input");
-                   // e.Handled = true;
-                    //return;
                 }
             }
         }
@@ -774,33 +775,34 @@ namespace Sudoku
             DataGridView grid = (sender as DataGridView);
             int r = e.RowIndex;
             int c = e.ColumnIndex;
-            Console.WriteLine("indeks retka i stupca " + r.ToString() + " " + c.ToString());
 
             for (int i = 0; i < cellnumber; ++i)
             {
                 grid.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                for( int j = 0; j < cellnumber; ++j)
+                //grid.Columns[i].DefaultCellStyle.BackColor = Color.White;
+                /*for( int j = 0; j < cellnumber; ++j)
                 {
                     grid.Rows[i].Cells[j].Style.ApplyStyle(this.grid.Rows[i].DefaultCellStyle);
-                }
+                }*/
                 //grid.Columns[i].DefaultCellStyle.BackColor = Color.White;
-                
+               // grid.Columns[i].DefaultCellStyle = grid.Rows[i].DefaultCellStyle;
             }
+            grid.Rows[r].DefaultCellStyle.BackColor = Color.Salmon;
 
-            for (int i = 0; i < cellnumber; ++i)
-            {
-                //if( i == c) grid.Columns[i].DefaultCellStyle.BackColor = Color.Salmon;
-                if( i == r) grid.Rows[i].DefaultCellStyle.BackColor = Color.Salmon;
-                //else grid.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                /* if (i == c)
-                 {
-                     grid.Columns[i].DefaultCellStyle.BackColor = Color.Salmon;
-                 }*/
-                //else grid.Columns[i].DefaultCellStyle.BackColor = Color.White;
-            }
+            /* for (int i = 0; i < cellnumber; ++i)
+             {
+                 //if( i == c) grid.Columns[i].DefaultCellStyle.BackColor = Color.Salmon;
+                 if( i == r) grid.Rows[i].DefaultCellStyle.BackColor = Color.Salmon;
+                 //else grid.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                  if (i == c)
+                  {
+                      grid.Columns[i].DefaultCellStyle.BackColor = Color.Salmon;
+                  }
+            //else grid.Columns[i].DefaultCellStyle.BackColor = Color.White;
+        }*/
             for( int i = 0; i < cellnumber; ++i)
             {
-                grid.Rows[r].Cells[i].Style.ApplyStyle(this.grid.Columns[c].DefaultCellStyle);
+                grid.Rows[i].Cells[c].Style.ApplyStyle(this.grid.Rows[r].DefaultCellStyle);
             }
 
         }
@@ -868,8 +870,12 @@ namespace Sudoku
             congratsp.Location = new Point(this.label1.Location.X - 200, this.label1.Location.Y + 50);
             congratsp.Image = Properties.Resources.fireworks;
             this.Controls.Add(congratsp);
-            yay = new SoundPlayer(Properties.Resources.yay);
-            yay.Play();
+            if(button3.Text == "On")
+            {
+                yay = new SoundPlayer(Properties.Resources.yay);
+                yay.Play();
+            }
+            
 
             congratsl = new Label();
             congratsl.Name = "congratsl";
@@ -1579,6 +1585,37 @@ namespace Sudoku
                         return false;
 
             return true;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if( button3.Text == "On")
+            {
+                button3.Text = "Off";
+                music.Stop();
+            }
+            else
+            {
+                button3.Text = "On";
+                music.PlayLooping();
+            }
+
+        }
+
+        private void button3_MouseEnter(object sender, EventArgs e)
+        {
+            Button gumb = (Button)sender;
+            gumb.BackColor = Color.DarkRed;
+            gumb.ForeColor = Color.Black;
+            gumb.FlatAppearance.BorderColor = Color.Black;
+        }
+
+        private void button3_MouseLeave(object sender, EventArgs e)
+        {
+            Button gumb = (Button)sender;
+            gumb.BackColor = Color.Black;
+            gumb.ForeColor = Color.DarkRed;
+            gumb.FlatAppearance.BorderColor = Color.DarkRed;
         }
     }
 }
