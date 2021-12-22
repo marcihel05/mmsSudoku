@@ -49,6 +49,7 @@ namespace Sudoku
         private List<List<string>> matrica;
         private List<List<string>> gmatrica;
         private List<List<string>> pgmatrica;
+        private List<string> values;
 
         private string biljeske;
 
@@ -79,6 +80,9 @@ namespace Sudoku
             matrica = new List<List<string>>();
             gmatrica = new List<List<string>>();
             pgmatrica = new List<List<string>>();
+            values = new List<string>();
+            //for( int i = 0; i < 9; ++i ) values.Add(i.ToString());
+           // Console.WriteLine(values.Count());
 
             InitializeComponent();
             DoubleBuffered = true; //za smanjenje grafičkih smetnji
@@ -142,9 +146,11 @@ namespace Sudoku
             matrica.Clear();
             gmatrica.Clear();
             pgmatrica.Clear();
-            matrica.TrimExcess();
+            values.Clear();
+            /*matrica.TrimExcess();
             gmatrica.TrimExcess();
             pgmatrica.TrimExcess();
+            values.TrimExcess();*/
 
             this.label1.Visible = true;
             this.Controls.Remove(congratsl);
@@ -376,23 +382,29 @@ namespace Sudoku
         {
             initialize_Notes();
             initialize_Time();
-
+            for (int i = 1; i < 10; ++i) values.Add(i.ToString());
             Button gumb = (sender as Button);
-            Console.WriteLine("start game new");
+            //Console.WriteLine("start game new");
 
             if (gumb.Name == "easy" || gumb.Name == "medium" || gumb.Name == "hard") //one sve imaju tablicu 9x9
             {
-                for (int j = 0; j < 3; ++j)
+                Console.WriteLine("9x9");
+                for (int j = 0; j < 9; ++j)
                 {
-                    List<string> pom = new List<string>();
-                    for (int k = 0; k < 3; ++k)
+                    List<string> pom1 = new List<string>();
+                    List<string> pom2 = new List<string>();
+                    List<string> pom3 = new List<string>();
+                    for (int k = 0; k < 9; ++k)
                     {
-                        pom.Add("");
+                        pom1.Add(" ");
+                        pom2.Add(" ");
+                        pom3.Add(" ");
                     }
-                    matrica.Add(pom);
-                    gmatrica.Add(pom);
-                    pgmatrica.Add(pom);
+                    matrica.Add(pom1);
+                    gmatrica.Add(pom2);
+                    pgmatrica.Add(pom3);
                 }
+                Console.WriteLine("velicina matrice " + matrica.Count().ToString());
                 generate_sudoku(sender, 9); //generiramo sudoku igru 9x9 ovisno o težini
                 initialize_NewGrid("grid");
                 cellwidth = 45;
@@ -405,17 +417,22 @@ namespace Sudoku
 
             else if (gumb.Name == "16") //tablica 16x16
             {
-                for (int j = 0; j < 4; ++j)
+                for (int j = 0; j < 16; ++j)
                 {
-                    List<string> pom = new List<string>();
-                    for (int k = 0; k < 4; ++k)
+                    List<string> pom1 = new List<string>();
+                    List<string> pom2 = new List<string>();
+                    List<string> pom3 = new List<string>();
+                    for (int k = 0; k < 16; ++k)
                     {
-                        pom.Add("");
+                        pom1.Add(" ");
+                        pom2.Add(" ");
+                        pom3.Add(" ");
                     }
-                    matrica.Add(pom);
-                    gmatrica.Add(pom);
-                    pgmatrica.Add(pom);
+                    matrica.Add(pom1);
+                    gmatrica.Add(pom2);
+                    pgmatrica.Add(pom3);
                 }
+                for( char c = 'A'; c<= 'G'; ++c) values.Add(c.ToString());
                 generate_sudoku(sender, 16); //generiramo sudoku igru 16x16
                 initialize_NewGrid("grid");
                 cellwidth = 42;
@@ -430,22 +447,28 @@ namespace Sudoku
             else if (gumb.Name == "25")
             {
                 Console.WriteLine("25");
-                for (int j = 0; j < 5; ++j)
+                for (int j = 0; j < 25; ++j)
                 {
-                    List<string> pom = new List<string>();
-                    for (int k = 0; k < 5; ++k)
+                    List<string> pom1 = new List<string>();
+                    List<string> pom2 = new List<string>();
+                    List<string> pom3 = new List<string>();
+                    for (int k = 0; k < 25; ++k)
                     {
-                        pom.Add("");
+                        pom1.Add(" ");
+                        pom2.Add(" ");
+                        pom3.Add(" ");
                     }
 
-                    matrica.Add(pom);
-                    gmatrica.Add(pom);
-                    pgmatrica.Add(pom);
+                    matrica.Add(pom1);
+                    gmatrica.Add(pom2);
+                    pgmatrica.Add(pom3);
+                    //Console.WriteLine(pgmatrica.Count());
                 }
+                for (char c = 'A'; c <= 'P'; ++c) values.Add(c.ToString());
                 generate_sudoku(sender, 25);
                 Console.WriteLine("generiran sudoku");
                 initialize_NewGrid("grid");
-                Console.WriteLine("generiran sudoku");
+                Console.WriteLine("generiran grid");
                 cellwidth = 25;
                 cellheight = 25;
                 cellnumber = 25;
@@ -551,15 +574,25 @@ namespace Sudoku
                 row.Height = cellheight;
                 grid.Rows.Add(row);
             }
-
+            //Console.WriteLine(pgmatrica.Count());
+            // for( int i = 0; i < pgmatrica.Count(); ++i) Console.WriteLine(pgmatrica[i].Count());
+            List<string> pom = new List<string>();
+            for (int i = 0; i < cellnumber; ++i)
+                for (int j = 0; j < cellnumber; ++j)
+                    pom.Add(pgmatrica[i][j]);
             for (int i = 0; i < cellnumber; ++i)
                 for (int j = 0; j < cellnumber; ++j)
                 {
-                    if( pgmatrica[i][j] != "")
+                    //Console.WriteLine(pgmatrica[i].Count());
+                    //if( pgmatrica[i][j] != " ")
+                    if( pom[i*cellnumber + j] != " ")
                     {
-                        grid.Rows[i].Cells[j].Value = pgmatrica[i][j];
+                        Console.WriteLine("wtf");
+                        //grid.Rows[i].Cells[j].Value = pgmatrica[i][j];
+                        grid.Rows[i].Cells[j].Value = pom[i * cellnumber + j];
                         grid.Rows[i].Cells[j].ReadOnly = true;
                         grid.Rows[i].Cells[j].Style.ForeColor = Color.Black;
+                        //Console.WriteLine(pgmatrica[i].Count());
                     }
                 }
             //podebljanje 3x3 odnosno 4x4  odnosno 5x5 podtablica u tablici
@@ -671,15 +704,10 @@ namespace Sudoku
             {
                 cell.Style.Font = new Font("Calibri", 16F, FontStyle.Bold);
                 cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                if (cellnumber == 9)
-                {
-                    matrica9[e.RowIndex, e.ColumnIndex] = Convert.ToInt32(cell.Value);
-                }
 
-                else if (cellnumber == 16)
-                {
-                    matrica16[e.RowIndex, e.ColumnIndex] = cell.Value.ToString();
-                }
+                Console.WriteLine("velicina matrice u cellValues" + matrica.Count().ToString());
+                matrica[e.RowIndex][e.ColumnIndex] = cell.Value.ToString();
+                Console.WriteLine("velicina matrice u cellValues na kraju" + matrica.Count().ToString());
 
                 bool gotovo = check_IfDone();
                 if (gotovo) show_Congratulations();
@@ -721,10 +749,13 @@ namespace Sudoku
         //uspoređuje generiranu matricu i matricu iz igre
         private bool check_IfDone()
         {
-            if (cellnumber == 9 && matrica9.Cast<int>().SequenceEqual(gmatrica9.Cast<int>())) return true;
+            /*if (cellnumber == 9 && matrica9.Cast<int>().SequenceEqual(gmatrica9.Cast<int>())) return true;
             else if (cellnumber == 16 && matrica16.Cast<string>().SequenceEqual(gmatrica16.Cast<string>())) return true;
-            else if (cellnumber == 25 && matrica25.Cast<string>().SequenceEqual(gmatrica25.Cast<string>())) return true;
-            else return false;
+            else if (cellnumber == 25 && matrica25.Cast<string>().SequenceEqual(gmatrica25.Cast<string>())) return true;*/
+            for (int i = 0; i < cellnumber; i++)
+                for (int j = 0; j < cellnumber; j++)
+                    if (matrica[i][j] != gmatrica[i][j]) return false;
+            return true;
         }
 
         //čestitke ako korisnik pobijedi
@@ -767,7 +798,7 @@ namespace Sudoku
         }
 
         //generiranje igre
-        private void generate_sudoku9(object sender) //sender nam treba da vidimo koje je težine
+       /* private void generate_sudoku9(object sender) //sender nam treba da vidimo koje je težine
         {
             // Koristimo bolji algoritam od klasičnog koji backtrackingom puni celiju po celiju redom
             // Ovdje se popune dijagonalni kvadrati, a zatim ostatak rekurzivno
@@ -782,38 +813,43 @@ namespace Sudoku
                 generateUnsolvedSudoku9(50);
             if (difficulty == "HARD")
                 generateUnsolvedSudoku9(60);
-        }
+        }*/
 
         private void generate_sudoku(object sender, int dim)
         {
             Console.WriteLine("generating sudoku");
             generateDiagonals(dim);
-            generateRemaining(0, (int) Math.Sqrt(dim));
+            //generateRemaining(dim, 0, (int) Math.Sqrt(dim));
             Console.WriteLine("generated solved");
 
             string difficulty = (sender as Button).Text;
 
+            /*for( int i = 0; i< gmatrica.Count(); ++i)
+                for( int j = 0; j < gmatrica[i].Count(); ++j)
+                    Console.WriteLine(gmatrica[i][j].ToString());*/
+
             if (difficulty == "EASY")
-                generateUnsolvedSudoku(dim, 40);
+                generateUnsolvedSudoku(dim, 5);
             if (difficulty == "MEDIUM")
-                generateUnsolvedSudoku(dim, 50);
+                generateUnsolvedSudoku(dim, 6);
             if (difficulty == "HARD")
-                generateUnsolvedSudoku(dim, 60);
+                generateUnsolvedSudoku(dim, 7);
             if (difficulty == "16x16")
-                generateUnsolvedSudoku(dim, 100);
+                generateUnsolvedSudoku(dim, 8);
             if (difficulty == "25x25")
-                generateUnsolvedSudoku(dim, 250);
+                generateUnsolvedSudoku(dim, 10);
             Console.WriteLine("generated unsolved");
         }
 
         private void generateUnsolvedSudoku(int dim, int blanks)
         {
             int sqrt = (int)Math.Sqrt(dim);
-            for( int i = 0; i < sqrt; ++i)
+            for( int i = 0; i < dim; ++i)
             {
-                for( int j = 0; j < sqrt; ++j)
+                for( int j = 0; j < dim; ++j)
                 {
                     pgmatrica[i][j] = gmatrica[i][j];
+                    //Console.WriteLine(pgmatrica[i][j]);
                 }
             }
 
@@ -823,18 +859,22 @@ namespace Sudoku
                 do
                 {
                     Random rnd = new Random();
-                    r = rnd.Next(0, sqrt);
-                    c = rnd.Next(0, sqrt);
-                   
-                }
-                while (pgmatrica[r][c] == "");
+                    
+                    r = rnd.Next(0, dim);
+                    //Console.WriteLine(r);
+                    c = rnd.Next(0, dim);
+                    //Console.WriteLine(c);
+                    //Console.WriteLine(pgmatrica[r][c]);
 
-                pgmatrica[r][c] = "";
-                Console.WriteLine("gotov");
+                }
+                while (pgmatrica[r][c] == " ");
+
+                pgmatrica[r][c] = " ";
+                //Console.WriteLine("gotov");
             }
         }
 
-        private void generateUnsolvedSudoku9(int blanks) // prazni polja
+        /*private void generateUnsolvedSudoku9(int blanks) // prazni polja
         {
             for(int i = 0; i < 9; ++i)
             {
@@ -857,9 +897,9 @@ namespace Sudoku
 
                 pgmatrica9[r, c] = 0;
             }
-        }
+        }*/
 
-        private void generate_sudoku16()
+       /* private void generate_sudoku16()
         {
             generateDiagonals16();
             generateRemaining16(0, 4);
@@ -890,9 +930,9 @@ namespace Sudoku
 
                 pgmatrica16[r, c] = "";
             }
-        }
+        }*/
 
-        private void generateDiagonals9()
+       /* private void generateDiagonals9()
         {
             for(int i = 0; i < 9; i = i + 3)
                 fillSquare9(i, i);
@@ -902,17 +942,19 @@ namespace Sudoku
         {
             for (int i = 0; i < 16; i = i + 4)
                 fillSquare16(i, i);
-        }
+        }*/
 
         private void generateDiagonals(int dim)
         {
-            for (int i = 0; i < dim; i = i + dim)
+            //Console.WriteLine("dimenzija u genDiag " + dim.ToString());
+            int sqrt = (int)Math.Sqrt(dim);
+            for (int i = 0; i < dim; i = i + sqrt)
                 fillSquare(dim, i, i);
         }
 
         private void fillSquare(int dim, int row, int column)
         {
-            List<string> values = new List<string>();
+            /*List<string> values = new List<string>();
             for (int i = 1; i < 10; ++i) values.Add(i.ToString());
             if(dim > 9)
             {
@@ -921,11 +963,12 @@ namespace Sudoku
             if (dim > 16)
             {
                 for (char c = 'H'; c <= 'P'; ++c) values.Add(c.ToString());
-            }
+            }*/
 
 
             int num;
             int sqrt = (int)Math.Sqrt(dim);
+            //Console.WriteLine("num of values" + values.Count().ToString());
             for( int i = 0; i < sqrt; ++i)
             {
                 for( int j = 0; j < sqrt; ++j)
@@ -934,9 +977,11 @@ namespace Sudoku
                     {
                         Random rnd = new Random();
                         num = rnd.Next(0, dim);
+                        //Console.WriteLine(num);
                     }
                     while (valueInSquare(dim, values[num], row, column, gmatrica));
                     gmatrica[row + i][column + j] = values[num];
+                   // Console.WriteLine(gmatrica[row + i][column + j]);
                 }
                 
             }
@@ -984,65 +1029,52 @@ namespace Sudoku
 
         private bool generateRemaining(int dim, int i, int j)
         {
-            return false;
-        }
-
-        private bool generateRemaining(int i, int j)
-        {
-            return true;
-        }
-
-        private bool generateRemaining9(int i, int j)
-        {
-            if(j >= 9 && i < 8)
+            if( j>= dim && i < dim - 1)
             {
                 ++i;
                 j = 0;
             }
-            if (i >= 9 && j >= 9)
-            {
-                return true;
-            }
-
-            if(i < 3)
-            {
-                if (j < 3)
-                    j = 3;
-            }
-            else if(i < 6)
-            {
-                if (j == (int)(i / 3) * 3)
-                    j = j + 3;
-            }
-            else
-            {
-                if(j == 6)
+            if (i >= dim && j >= dim) return true;
+            
+            int sqrt = (int)Math.Sqrt(dim);
+            Console.WriteLine("in generateRemaining");
+            for (int k = 0; k < sqrt; ++k)
+                if (k * sqrt <= i && i < (k + 1) * sqrt && j < (k + 1) * sqrt && j >= k * sqrt)
                 {
-                    i = i + 1;
-                    j = 0;
-                    if (i >= 9)
-                    {
-                        return true;
-                    } 
+                    Console.WriteLine("i i j su " + i.ToString() + " " + j.ToString());
+                    while (j < (k + 1) * sqrt) ++j;
+                    Console.WriteLine("j u genRem je " + j.ToString());
+                    break;
                 }
-            }
 
-            for(int num = 1; num <= 9; ++num)
+
+            if (j >= dim && i <= dim - 1)
             {
-                if(!valueInRow9(num, i, gmatrica9) && !valueInColumn9(num, j, gmatrica9) && !valueInSquare9(num, i, j, gmatrica9))
+                //++i;
+                j = 0;
+
+            }
+            else if (j >= dim && i >= dim) return true;
+
+            for (int num = 0; num < dim; ++num)
+            {
+                
+                if (!valueInRow(dim, values[num], i, gmatrica) && !valueInColumn(dim, values[num], j, gmatrica) && !valueInSquare(dim, values[num], i, j, gmatrica))
                 {
-                    gmatrica9[i, j] = num;
-                    if (generateRemaining9(i, j + 1))
+                    Console.WriteLine("value je " + values[num].ToString());
+                    gmatrica[i][j] = values[num];
+                    Console.WriteLine("generate remaining " + gmatrica[i][j]);
+                    if (generateRemaining(dim, i, j + 1))
                         return true;
 
-                    gmatrica9[i, j] = 0;
+                    gmatrica[i][j] = " ";
                 }
             }
 
             return false;
         }
 
-        private bool generateRemaining16(int i, int j)
+        /*private bool generateRemaining16(int i, int j)
         {
             if (j >= 16 && i < 15)
             {
@@ -1092,20 +1124,73 @@ namespace Sudoku
             }
 
             return false;
-        }
+        }*/
 
-        private bool valueInRow(int dim, string val, int r, List<List<string>> matrica)
+
+       /* private bool generateRemaining9(int i, int j)
+        {
+            if(j >= 9 && i < 8)
+            {
+                ++i;
+                j = 0;
+            }
+            if (i >= 9 && j >= 9)
+            {
+                return true;
+            }
+
+            if(i < 3)
+            {
+                if (j < 3)
+                    j = 3;
+            }
+            else if(i < 6)
+            {
+                if (j == (int)(i / 3) * 3)
+                    j += 3;
+            }
+            else
+            {
+                if(j == 6)
+                {
+                    i++;
+                    j = 0;
+                    if (i >= 9)
+                    {
+                        return true;
+                    } 
+                }
+            }
+
+            for(int num = 1; num <= 9; ++num)
+            {
+                if(!valueInRow9(num, i, gmatrica9) && !valueInColumn9(num, j, gmatrica9) && !valueInSquare9(num, i, j, gmatrica9))
+                {
+                    gmatrica9[i, j] = num;
+                    if (generateRemaining9(i, j + 1))
+                        return true;
+
+                    gmatrica9[i, j] = 0;
+                }
+            }
+
+            return false;
+        }*/
+
+        
+
+        private bool valueInRow(int dim, string val, int r, List<List<string>> listMatrica)
         {
             int column;
 
             for (column = 0; column < dim; ++column)
-                if (val.Equals(matrica[r][column]))
+                if (val.Equals(listMatrica[r][column]))
                     return true;
 
             return false;
         }
 
-        private bool valueInRow9(int val, int r, int[,] matrica)
+        /*private bool valueInRow9(int val, int r, int[,] matrica)
         {
             int column;
 
@@ -1125,20 +1210,20 @@ namespace Sudoku
                     return true;
 
             return false;
-        }
+        }*/
 
-        private bool valueInColumn(int dim, string val, int c, List<List<string>> matrica)
+        private bool valueInColumn(int dim, string val, int c, List<List<string>> listMatrica)
         {
             int row;
 
             for (row = 0; row < dim; ++row)
-                if (val.Equals(matrica[row][c]))
+                if (val.Equals(listMatrica[row][c]))
                     return true;
 
             return false;
         }
 
-        private bool valueInColumn9(int val, int c, int[,] matrica)
+       /* private bool valueInColumn9(int val, int c, int[,] matrica)
         {
             int row;
 
@@ -1158,19 +1243,21 @@ namespace Sudoku
                     return true;
 
             return false;
-        }
+        }*/
 
         private bool valueInSquare(int dim, string val, int r, int c, List<List<string>> listMatrica)
         {
             int i, j;
             int sqrt = (int)Math.Sqrt(dim);
-
-
+            for (i = r - r % sqrt; i < r - r % sqrt + sqrt; ++i)
+                for (j = c - c % sqrt; j < c - c % sqrt + sqrt; ++j)
+                    if (val.Equals(listMatrica[i][j]))
+                        return true;
 
             return false;
         }
 
-        private bool valueInSquare9(int val, int r, int c, int[,] matrica)
+        /*private bool valueInSquare9(int val, int r, int c, int[,] matrica)
         {
             int i, j;
 
@@ -1359,7 +1446,7 @@ namespace Sudoku
             }
 
             return false;
-        }
+        }*/
 
         private bool matrixFull9(int[,] matrica)
         {
