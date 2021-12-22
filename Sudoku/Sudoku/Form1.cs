@@ -29,22 +29,24 @@ namespace Sudoku
         private Label congratsl;
         private Label congratst;
         private PictureBox congratsp;
+        private Button hintb;
+        private Label hintl;
 
         //matrice igre
         //private string[,] matrica9;
-        private int[,] matrica9;
+       /* private int[,] matrica9;
         private string[,] matrica16;
-        private string[,] matrica25;
+        private string[,] matrica25;*/
 
         //generirane matrice, pg će biti pomoćne u kojima će sve vrijednosti biti 0, osim onih koje se pojavljuju na početku sudokua
         //private string[,] gmatrica9;
         //private string[,] pgmatrica9;
-        private int[,] gmatrica9;
+        /*private int[,] gmatrica9;
         private int[,] pgmatrica9;
         private string[,] gmatrica16;
         private string[,] pgmatrica16;
         private string[,] gmatrica25;
-        private string[,] pgmatrica25;
+        private string[,] pgmatrica25;*/
 
         private List<List<string>> matrica;
         private List<List<string>> gmatrica;
@@ -107,6 +109,7 @@ namespace Sudoku
             grid.SelectionMode = DataGridViewSelectionMode.CellSelect;
             grid.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(grid_EditingControlShowing);
             grid.CellValueChanged += new DataGridViewCellEventHandler(cell_CellValueChanged);
+            grid.CellClick += new DataGridViewCellEventHandler(cell_CellClick);
             return grid;
         }
 
@@ -147,10 +150,10 @@ namespace Sudoku
             gmatrica.Clear();
             pgmatrica.Clear();
             values.Clear();
-            /*matrica.TrimExcess();
+            matrica.TrimExcess();
             gmatrica.TrimExcess();
             pgmatrica.TrimExcess();
-            values.TrimExcess();*/
+            values.TrimExcess();
 
             this.label1.Visible = true;
             this.Controls.Remove(congratsl);
@@ -649,7 +652,7 @@ namespace Sudoku
 
         private void cell_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (cellnumber == 9 && (!char.IsDigit(e.KeyChar) || (char.IsDigit(e.KeyChar) && char.Equals(e.KeyChar, '0'))))
+            if (cellnumber == 9 && (!char.IsDigit(e.KeyChar) || (char.IsDigit(e.KeyChar) && char.Equals(e.KeyChar, '0'))) && e.KeyChar != (char)8)
             {
                 e.Handled = true;
                 return;
@@ -672,6 +675,9 @@ namespace Sudoku
                 }
             }
 
+            
+                
+
             if (on) //ako su uključene bilješke, onda samo želimo zapisati moguće vrijednosti, ne spremamo u matricu
             {
                 foreach (DataGridViewTextBoxColumn column in grid.Columns)
@@ -690,6 +696,16 @@ namespace Sudoku
                 foreach (DataGridViewTextBoxColumn column in grid.Columns)
                 {
                     column.MaxInputLength = 1;
+                    //column.ReadOnly = false;
+                }
+                int r = grid.CurrentCell.RowIndex;
+                int c = grid.CurrentCell.ColumnIndex;
+                string val = e.KeyChar.ToString();
+                if (!val.Equals(gmatrica[r][c]) && val!= ((char)8).ToString())
+                {
+                    MessageBox.Show("Wrong input");
+                   // e.Handled = true;
+                    //return;
                 }
             }
         }
@@ -702,15 +718,19 @@ namespace Sudoku
 
             if (!on) //odlučili smo se za vrijednost, spremamo je u matricu
             {
+                Console.WriteLine("mjenjam cell");
                 cell.Style.Font = new Font("Calibri", 16F, FontStyle.Bold);
                 cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-                Console.WriteLine("velicina matrice u cellValues" + matrica.Count().ToString());
+                //Console.WriteLine("velicina matrice u cellValues" + matrica.Count().ToString());
+                //string val = cell.Value.ToString();
+                
                 matrica[e.RowIndex][e.ColumnIndex] = cell.Value.ToString();
-                Console.WriteLine("velicina matrice u cellValues na kraju" + matrica.Count().ToString());
+                    //Console.WriteLine("velicina matrice u cellValues na kraju" + matrica.Count().ToString());
 
                 bool gotovo = check_IfDone();
                 if (gotovo) show_Congratulations();
+                
             }
 
             else if (on) //ne spremamo
@@ -721,6 +741,42 @@ namespace Sudoku
                 cell.Value = biljeske;
                 biljeske = String.Empty;
             }
+        }
+
+        private void cell_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView grid = (sender as DataGridView);
+            int r = e.RowIndex;
+            int c = e.ColumnIndex;
+            Console.WriteLine("indeks retka i stupca " + r.ToString() + " " + c.ToString());
+
+            for (int i = 0; i < cellnumber; ++i)
+            {
+                grid.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                for( int j = 0; j < cellnumber; ++j)
+                {
+                    grid.Rows[i].Cells[j].Style.ApplyStyle(this.grid.Rows[i].DefaultCellStyle);
+                }
+                //grid.Columns[i].DefaultCellStyle.BackColor = Color.White;
+                
+            }
+
+            for (int i = 0; i < cellnumber; ++i)
+            {
+                //if( i == c) grid.Columns[i].DefaultCellStyle.BackColor = Color.Salmon;
+                if( i == r) grid.Rows[i].DefaultCellStyle.BackColor = Color.Salmon;
+                //else grid.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                /* if (i == c)
+                 {
+                     grid.Columns[i].DefaultCellStyle.BackColor = Color.Salmon;
+                 }*/
+                //else grid.Columns[i].DefaultCellStyle.BackColor = Color.White;
+            }
+            for( int i = 0; i < cellnumber; ++i)
+            {
+                grid.Rows[r].Cells[i].Style.ApplyStyle(this.grid.Columns[c].DefaultCellStyle);
+            }
+
         }
 
         //promijeni se stil unosa kada je gumb notes kliknut
