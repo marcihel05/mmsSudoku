@@ -1,11 +1,13 @@
-# Sudoku
+# Sudoku - dorada
 
-4. Sudoku
-Tamara Bistrović, Tea Devčić, Jelena Mišerić, Ana Krmpotić
+### Orginal: 
 
-Sažetak: Napravit ćemo windows igricu Sudoku. Igra će imati opcije biranja težine (Lako, Srednje, Teško) te uzorka (klasični kvadrat, iregularni, Samurai sudoku…) kao i dodatne opcije poput upozorenja na grešku. 
+### Napravljene izmjene:
+- implementirana je jedna funkcija koja generira sudoku u ovisnosti o dimenziji, ali algoritam ne funkcionira za sudoku dimenzija 25x25, tj. generiranje predugo traje)
+- kad se klikne na ćeliju, obojaju se red i stupac u kojem se nalazi ćelija (ali kad se klikne na drugu ćeliju, stupac ostaje obojan, red ne – to bi trebalo popraviti)
+- ako se u polje unese krivi znak, javlja se poruka, tj. pop-up prozor
+- dodana je opcija Hint
+- dodan je zvuk na kraju igre
+- omogućeno je brisanje unesenih znakova pomoći backspace-a
+- pozadinska glazba i mogućnost uključivanja i isključivanja glazbe (glazba s https://www.bensound.com/ )
 
-Potrebna oprema: Windows operacijski sustav, Visual Studio Code, Processing
-
-Predviđeni datum završetka: kraj veljače
-Poveznica na github: https://github.com/ankrmpo/Sudoku
