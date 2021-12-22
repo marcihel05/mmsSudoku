@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,7 +31,7 @@ namespace Sudoku
         private Label congratst;
         private PictureBox congratsp;
         private Button hintb;
-        private Label hintl;
+        private SoundPlayer yay;
 
         //matrice igre
         //private string[,] matrica9;
@@ -67,7 +68,7 @@ namespace Sudoku
             timeElapsed = 0;
 
             //matrica9 = new string[9, 9];
-            matrica9 = new int[9, 9];
+           /* matrica9 = new int[9, 9];
             matrica16 = new string[16, 16];
             matrica25 = new string[25, 25];
             gmatrica9 = new int[9, 9];
@@ -77,7 +78,7 @@ namespace Sudoku
             pgmatrica9 = new int[9, 9];
             //pgmatrica9 = new string[9, 9];
             pgmatrica16 = new string[16, 16];
-            pgmatrica25 = new string[25, 25];
+            pgmatrica25 = new string[25, 25];*/
 
             matrica = new List<List<string>>();
             gmatrica = new List<List<string>>();
@@ -131,12 +132,13 @@ namespace Sudoku
 
             this.Controls.Remove(notesb);
             this.Controls.Remove(notesl);
+            this.Controls.Remove(hintb);
             on = false;
 
             if(t.Enabled == true) t.Stop();
             this.Controls.Remove(time);
 
-            Array.Clear(matrica9, 0, matrica9.Length);
+            /*Array.Clear(matrica9, 0, matrica9.Length);
             Array.Clear(matrica16, 0, matrica16.Length);
             Array.Clear(matrica25, 0, matrica25.Length);
             Array.Clear(gmatrica9, 0, gmatrica9.Length);
@@ -144,7 +146,7 @@ namespace Sudoku
             Array.Clear(gmatrica25, 0, gmatrica25.Length);
             Array.Clear(pgmatrica9, 0, pgmatrica9.Length);
             Array.Clear(pgmatrica16, 0, pgmatrica16.Length);
-            Array.Clear(pgmatrica25, 0, pgmatrica25.Length);
+            Array.Clear(pgmatrica25, 0, pgmatrica25.Length);*/
 
             matrica.Clear();
             gmatrica.Clear();
@@ -305,6 +307,28 @@ namespace Sudoku
             this.Controls.Add(time);
         }
 
+        private void initialize_Hint()
+        {
+            hintb = new Button();
+
+            hintb.Name = "hintb";
+            hintb.Text = "HINT";
+            hintb.Size = this.button1.Size;
+
+            hintb.AutoSize = false;
+            hintb.BackColor = Color.Black;
+            hintb.ForeColor = Color.DarkRed;
+            hintb.FlatAppearance.BorderColor = Color.DarkRed;
+            hintb.FlatAppearance.BorderSize = 5;
+            hintb.FlatStyle = FlatStyle.Flat;
+            hintb.TextAlign = ContentAlignment.MiddleCenter;
+            hintb.Font = new Font("Algerian", 22);
+            hintb.Click += new EventHandler(hint_Click);
+            hintb.MouseEnter += new EventHandler(gumb_MouseEnter);
+            hintb.MouseLeave += new EventHandler(gumb_MouseLeave);
+            this.Controls.Add(hintb);
+        }
+
        /* private void start_Game(object sender) //pokreće igru
         {
             initialize_Notes();
@@ -385,6 +409,7 @@ namespace Sudoku
         {
             initialize_Notes();
             initialize_Time();
+            initialize_Hint();
             for (int i = 1; i < 10; ++i) values.Add(i.ToString());
             Button gumb = (sender as Button);
             //Console.WriteLine("start game new");
@@ -564,6 +589,7 @@ namespace Sudoku
             notesl.Location = new Point(this.label1.Location.X, this.grid.Location.Y + grid.Size.Height + 20);
             notesb.Location = new Point(notesl.Location.X + notesl.Size.Width + 5, notesl.Location.Y);
             time.Location = new Point(notesl.Location.X, notesl.Location.Y + notesl.Size.Height + 5);
+            hintb.Location = new Point(button1.Location.X, button1.Location.Y - 200);
 
             for (int i = 0; i < cellnumber; ++i)
             {
@@ -794,6 +820,22 @@ namespace Sudoku
             }
         }
 
+        private void hint_Click(object sender, EventArgs e)
+        {
+            int r, c;
+
+            do
+            {
+                Random rnd = new Random();
+                r = rnd.Next(0, cellnumber);
+                c = rnd.Next(0, cellnumber);
+            }
+            while (matrica[r][c] != " ");
+
+            matrica[r][c] = gmatrica[r][c];
+            grid.Rows[r].Cells[c].Value = matrica[r][c];
+        }
+
         //računanje vremena
         void t_Tick(object sender, EventArgs e)
         {
@@ -826,6 +868,8 @@ namespace Sudoku
             congratsp.Location = new Point(this.label1.Location.X - 200, this.label1.Location.Y + 50);
             congratsp.Image = Properties.Resources.fireworks;
             this.Controls.Add(congratsp);
+            yay = new SoundPlayer(Properties.Resources.yay);
+            yay.Play();
 
             congratsl = new Label();
             congratsl.Name = "congratsl";
@@ -850,6 +894,7 @@ namespace Sudoku
             congratst.ForeColor = Color.DarkRed;
             congratst.Font = new Font("Algerian", 32);
             congratst.TextAlign = ContentAlignment.MiddleCenter;
+            
             this.Controls.Add(congratst);
         }
 

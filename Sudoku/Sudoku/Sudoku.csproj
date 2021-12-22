@@ -87,5 +87,11 @@
   <ItemGroup>
     <None Include="Resources\fireworks.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yay.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yay.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
