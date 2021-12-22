@@ -819,7 +819,7 @@ namespace Sudoku
         {
             Console.WriteLine("generating sudoku");
             generateDiagonals(dim);
-            //generateRemaining(dim, 0, (int) Math.Sqrt(dim));
+            generateRemaining(dim, 0, (int) Math.Sqrt(dim));
             Console.WriteLine("generated solved");
 
             string difficulty = (sender as Button).Text;
@@ -829,15 +829,15 @@ namespace Sudoku
                     Console.WriteLine(gmatrica[i][j].ToString());*/
 
             if (difficulty == "EASY")
-                generateUnsolvedSudoku(dim, 5);
+                generateUnsolvedSudoku(dim, 40);
             if (difficulty == "MEDIUM")
-                generateUnsolvedSudoku(dim, 6);
+                generateUnsolvedSudoku(dim, 50);
             if (difficulty == "HARD")
-                generateUnsolvedSudoku(dim, 7);
+                generateUnsolvedSudoku(dim, 60);
             if (difficulty == "16x16")
-                generateUnsolvedSudoku(dim, 8);
+                generateUnsolvedSudoku(dim, 100);
             if (difficulty == "25x25")
-                generateUnsolvedSudoku(dim, 10);
+                generateUnsolvedSudoku(dim, 250);
             Console.WriteLine("generated unsolved");
         }
 
@@ -1029,14 +1029,36 @@ namespace Sudoku
 
         private bool generateRemaining(int dim, int i, int j)
         {
+            int sqrt = (int)Math.Sqrt(dim);
             if( j>= dim && i < dim - 1)
             {
                 ++i;
                 j = 0;
             }
             if (i >= dim && j >= dim) return true;
-            
-            int sqrt = (int)Math.Sqrt(dim);
+
+            if (i < sqrt)
+            {
+                if (j < sqrt)
+                    j = sqrt;
+            }
+            else if (i < dim - sqrt)
+            {
+                if (j == (int)(i / sqrt) * sqrt)
+                    j += sqrt;
+            }
+            else
+            {
+                if (j == dim - sqrt)
+                {
+                    i++;
+                    j = 0;
+                    if (i >= dim)
+                        return true;
+                }
+            }
+
+            /*int sqrt = (int)Math.Sqrt(dim);
             Console.WriteLine("in generateRemaining");
             for (int k = 0; k < sqrt; ++k)
                 if (k * sqrt <= i && i < (k + 1) * sqrt && j < (k + 1) * sqrt && j >= k * sqrt)
@@ -1054,7 +1076,7 @@ namespace Sudoku
                 j = 0;
 
             }
-            else if (j >= dim && i >= dim) return true;
+            else if (j >= dim && i >= dim) return true;*/
 
             for (int num = 0; num < dim; ++num)
             {
